@@ -21,4 +21,15 @@ defmodule KV.Bucket do
   def put(bucket, key, value) do
     Agent.update(bucket, &Map.put(&1, key, value))
   end
+
+  def delete(bucket, key) do
+    # puts client to sleep
+    Process.sleep(1000)
+
+    Agent.get_and_update(bucket, fn dict ->
+      # puts server to sleep
+      Process.sleep(1000)
+      Map.pop(dict, key)
+    end)
+  end
 end
