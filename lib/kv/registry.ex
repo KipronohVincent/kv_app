@@ -40,7 +40,7 @@ defmodule KV.Registry do
   def init(table) do
     # 3. We have replaced the names map by the ETS table
     names = :ets.new(table, [:named_table, read_concurrency: true])
-    refs  = %{}
+    refs = %{}
     {:ok, {names, refs}}
   end
 
@@ -52,6 +52,7 @@ defmodule KV.Registry do
     case lookup(names, name) do
       {:ok, _pid} ->
         {:noreply, {names, refs}}
+
       :error ->
         {:ok, pid} = DynamicSupervisor.start_child(KV.BucketSupervisor, KV.Bucket)
         ref = Process.monitor(pid)
